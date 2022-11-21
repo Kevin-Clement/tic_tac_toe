@@ -63,3 +63,8 @@ body
     align-items: center;
     cursor: pointer;
 }
+
+.box:hover
+{
+    background-color: #2f4256;
+}
