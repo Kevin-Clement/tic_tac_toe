@@ -1,3 +1,6 @@
+const box = document.querySelectorAll('.box');
+const whichPlayer = document.querySelector('#player');
+
 let board = [
     [null, null, null],
     [null, null, null],
@@ -6,31 +9,55 @@ let board = [
 
 let player = 'X';
 
-/**
- * 
- * @returns {boolean} true if the game is over, false otherwise
- */
-const isGameOver = () => {
-    if (isWinner()) {
-        console.log(` Player ${player} won!`);
-        return true;
-    } else if (isDraw()) 
-        return true;
-    else 
-        return false;
-    
+const play = (event) => {
+    const box = event.target;
+    if(box.textContent !== '' || isWinner())
+        return;
+    box.innerHTML = player;
+    syncBoard(box);
+    if (!isWinner()) {
+        switchPlayer();
+        whichPlayer.innerHTML = `Player ${player}'s turn`;
+    }else{
+        whichPlayer.innerHTML = `Player ${player} won !`;
+        setTimeout(() => {
+            resetBoard();
+        }, 3000);
+    }
 }
 
-const isDraw = () =>{
-    // Check if the game is a draw
+const syncBoard = (box) => {
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
-            if (board[i][j] === null) {
-                return false;
+            if (box.id === `box${i}${j}`) {
+                board[i][j] = player;
             }
         }
     }
-    return true;
+}
+
+box.forEach(box => {
+    box.addEventListener('click', play);
+});
+
+const switchPlayer = () => {
+    if (player === 'X') 
+        player = 'O';
+    else 
+        player = 'X';
+}
+
+const resetBoard = () => {
+    box.forEach(box => {
+        box.innerHTML = '';
+    });
+    board = [
+        [null, null, null],
+        [null, null, null],
+        [null, null, null]
+    ];
+    player = 'X';
+    whichPlayer.innerHTML = '';
 }
 
 /**
@@ -85,36 +112,8 @@ const checkDiagonals = () => {
     }
 }
 
-const switchPlayer = () => {
-    if (player === 'X') player = 'O';
-    else player = 'X';
-}
-
 const printBoard = () => {
     for (var i = 0; i < board.length; i++) {
         console.log(board[i]);
     }
 }
-
-const play = (row, column) => {
-    board[row][column] = player;
-    if (!isGameOver()) {
-        switchPlayer();
-    }
-}
-
-// Play the game
-play(1, 1);
-play(0, 0);
-play(0, 2);
-play(2, 0);
-play(1, 0);
-play(1, 2);
-play(2, 1);
-play(0, 1);
-play(2, 2);
-
-
-printBoard();
-
-console.log(isGameOver());
