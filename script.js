@@ -27,13 +27,13 @@ const play = (event) => {
 }
 
 const syncBoard = (box) => {
-    for (var i = 0; i < board.length; i++) {
-        for (var j = 0; j < board[i].length; j++) {
-            if (box.id === `box${i}${j}`) {
-                board[i][j] = player;
+    board.map((row, rowIndex) => {
+        row.map((col, colIndex) => {
+            if (box.id === `box${rowIndex}${colIndex}`) {
+                board[rowIndex][colIndex] = player;
             }
-        }
-    }
+        })
+    })
 }
 
 box.forEach(box => {
@@ -65,11 +65,10 @@ const resetBoard = () => {
  * @returns {boolean} true if there is a winner, false otherwise
  */
 const isWinner = () => {
-    if (checkRows() || checkColumns() || checkDiagonals()) {
+    if (checkRows() || checkColumns() || checkDiagonals()) 
         return true;
-    } else {
+    else
         return false;
-    }
 }
 
 /**
@@ -77,12 +76,7 @@ const isWinner = () => {
  * @returns {boolean} true if the row has a winner, false otherwise
  */
 const checkRows = () => {
-    for (var i = 0; i < board.length; i++) {
-        if (board[i][0] === player && board[i][1] === player && board[i][2] === player) {
-            return true;
-        }
-    }
-    return false;
+    return board.some(row => row.every(cell => cell === player));
 }
 
 /**
@@ -90,12 +84,7 @@ const checkRows = () => {
  * @returns {boolean} true if the column has a winner, false otherwise
  */
 const checkColumns = () => {
-    for (var i = 0; i < board.length; i++) {
-        if (board[0][i] === player && board[1][i] === player && board[2][i] === player) {
-            return true;
-        }
-    }
-    return false;
+    return board[0].some((cell, index) => cell === player && board[1][index] === player && board[2][index] === player);
 }
 
 /**
@@ -103,17 +92,9 @@ const checkColumns = () => {
  * @returns {boolean} true if the diagonal has a winner, false otherwise
  */
 const checkDiagonals = () => {
-    if (board[0][0] === player && board[1][1] === player && board[2][2] === player) {
-        return true;
-    } else if (board[0][2] === player && board[1][1] === player && board[2][0] === player) {
-        return true;
-    } else {
-        return false;
-    }
+    return (board[0][0] === player && board[1][1] === player && board[2][2] === player) || (board[0][2] === player && board[1][1] === player && board[2][0] === player);
 }
 
 const printBoard = () => {
-    for (var i = 0; i < board.length; i++) {
-        console.log(board[i]);
-    }
+    board.map(row => console.log(row));
 }
